@@ -1,4 +1,4 @@
-package sml;
+package com.sdp.cwone.sml;
 
 /**
  * This class is the superclass of the classes for machine instructions
