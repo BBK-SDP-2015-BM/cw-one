@@ -69,4 +69,26 @@ public class SMLTest {
 
     }
 
+    @Test
+    public void testLin() throws Exception {
+
+        /**
+         * Run basic-sub.sml program
+         *
+         * Expected state of registers = [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10]         *
+         */
+
+        String program = "com/sdp/cwone/programs/basic-lin.sml";
+        translator = new Translator(program);
+        translator.readAndTranslate(machine.getLabels(), machine.getProg());
+        machine.execute();
+
+        registers = machine.getRegisters();
+
+        assertTrue(registers.getRegister(0) == 10);
+        assertTrue(registers.getRegister(13) == 10);
+        assertTrue(registers.getRegister(31) == 10);
+
+    }
+
 }
