@@ -49,4 +49,24 @@ public class SMLTest {
 
     }
 
+    @Test
+    public void testSub() throws Exception {
+
+        /**
+         * Run basic-sub.sml program
+         *
+         * Expected state of registers = [0, 6, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]         *
+         */
+
+        String program = "com/sdp/cwone/programs/basic-sub.sml";
+        translator = new Translator(program);
+        translator.readAndTranslate(machine.getLabels(), machine.getProg());
+        machine.execute();
+
+        registers = machine.getRegisters();
+
+        assertTrue(registers.getRegister(3) == 5);
+
+    }
+
 }
