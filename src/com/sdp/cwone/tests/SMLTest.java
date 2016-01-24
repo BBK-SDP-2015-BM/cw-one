@@ -5,8 +5,11 @@ import com.sdp.cwone.sml.Registers;
 import com.sdp.cwone.sml.Translator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Basil on 24/01/2016.
@@ -14,7 +17,7 @@ import static org.junit.Assert.*;
 public class SMLTest {
 
     private Machine machine;
-    private Translator translator;
+    private Translator translator1, translator2;
     private Registers registers;
 
     @Before
@@ -29,6 +32,9 @@ public class SMLTest {
 
     }
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
     public void testAdd() throws Exception {
 
@@ -39,8 +45,8 @@ public class SMLTest {
          */
 
         String program = "com/sdp/cwone/programs/basic-add.sml";
-        translator = new Translator(program);
-        translator.readAndTranslate(machine.getLabels(), machine.getProg());
+        translator1 = new Translator(program);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
         machine.execute();
 
         registers = machine.getRegisters();
@@ -59,8 +65,8 @@ public class SMLTest {
          */
 
         String program = "com/sdp/cwone/programs/basic-sub.sml";
-        translator = new Translator(program);
-        translator.readAndTranslate(machine.getLabels(), machine.getProg());
+        translator1 = new Translator(program);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
         machine.execute();
 
         registers = machine.getRegisters();
@@ -79,8 +85,8 @@ public class SMLTest {
          */
 
         String program = "com/sdp/cwone/programs/basic-lin.sml";
-        translator = new Translator(program);
-        translator.readAndTranslate(machine.getLabels(), machine.getProg());
+        translator1 = new Translator(program);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
         machine.execute();
 
         registers = machine.getRegisters();
@@ -101,13 +107,40 @@ public class SMLTest {
          */
 
         String program = "com/sdp/cwone/programs/basic-mul.sml";
-        translator = new Translator(program);
-        translator.readAndTranslate(machine.getLabels(), machine.getProg());
+        translator1 = new Translator(program);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
         machine.execute();
 
         registers = machine.getRegisters();
 
         assertTrue(registers.getRegister(3) == 36);
+
+    }
+
+    @Test
+    public void testDiv() throws Exception {
+
+        /**
+         * Run basic-div.sml & error-div.sml program
+         *
+         * Expected state of registers = [0, 100, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]         *
+         */
+
+        String program1 = "com/sdp/cwone/programs/basic-div.sml";
+        translator1 = new Translator(program1);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
+        machine.execute();
+
+        registers = machine.getRegisters();
+
+        assertTrue(registers.getRegister(3) == 10);
+
+        String program2 = "com/sdp/cwone/programs/error-div.sml";
+        translator2 = new Translator(program2);
+        translator2.readAndTranslate(machine.getLabels(), machine.getProg());
+
+        thrown.expect(ArithmeticException.class);       // expect arithmetic exception
+        machine.execute();
 
     }
 
