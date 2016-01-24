@@ -144,4 +144,20 @@ public class SMLTest {
 
     }
 
+    @Test
+    public void testOut() throws Exception {
+
+        /**
+         * Run basic-out.sml program
+         *
+         * Expected state of registers = [0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]         *
+         */
+
+        String program = "com/sdp/cwone/programs/basic-out.sml";
+        translator1 = new Translator(program);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
+        machine.execute();
+
+    }
+
 }

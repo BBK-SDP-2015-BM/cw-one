@@ -102,6 +102,9 @@ public class Translator {
                 s1 = scanInt();
                 s2 = scanInt();
                 return new DivInstruction(label, r, s1, s2);
+            case "out":
+                s1 = scanInt();
+                return new OutInstruction(label, s1);
             case "lin":
                 r = scanInt();
                 s1 = scanInt();
