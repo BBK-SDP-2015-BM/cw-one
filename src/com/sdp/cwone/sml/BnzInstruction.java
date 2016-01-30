@@ -8,10 +8,6 @@ public class BnzInstruction extends Instruction {
     private int register, value;
     private String targetLabel;
 
-    public BnzInstruction(String label, String opcode) {
-        super(label, opcode);
-    }
-
     public BnzInstruction(String label, int register, String targetLabel) {
         super(label, "bnz");
         this.register = register;

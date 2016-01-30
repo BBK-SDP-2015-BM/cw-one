@@ -2,7 +2,9 @@ package com.sdp.cwone.sml;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -82,6 +84,19 @@ public class Translator {
             return null;
 
         String ins = scan();
+
+        Package p = Instruction.class.getPackage();
+
+        try {
+            Class c = Class.forName(p.getName() + "." + ins.substring(0, 1).toUpperCase() + ins.substring(1) + "Instruction");
+            Constructor[] cs = c.getConstructors();
+
+            System.out.println("Constructors are: "
+                    + Arrays.toString(cs));
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found");
+        }
+
         switch (ins) {
             case "add":
                 r = scanInt();

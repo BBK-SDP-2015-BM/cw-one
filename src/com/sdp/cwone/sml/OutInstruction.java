@@ -7,12 +7,8 @@ public class OutInstruction extends Instruction {
 
     private int op;
 
-    public OutInstruction(String label, String op) {
-        super(label, op);
-    }
-
     public OutInstruction(String label, int op) {
-        this(label, "out");
+        super(label, "out");
         this.op = op;
     }
 
