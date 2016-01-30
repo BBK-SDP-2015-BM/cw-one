@@ -150,13 +150,53 @@ public class SMLTest {
         /**
          * Run basic-out.sml program
          *
-         * Expected state of registers = [0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]         *
+         * Expected state of registers = [0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]         *
          */
 
         String program = "com/sdp/cwone/programs/basic-out.sml";
         translator1 = new Translator(program);
         translator1.readAndTranslate(machine.getLabels(), machine.getProg());
         machine.execute();
+
+    }
+
+    @Test
+    public void testBnz() throws Exception {
+
+        /**
+         * Run basic-bnz.sml program
+         *
+         * Expected state of registers = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]         *
+         */
+
+        String program = "com/sdp/cwone/programs/basic-bnz.sml";
+        translator1 = new Translator(program);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
+        machine.execute();
+
+        registers = machine.getRegisters();
+
+        assertTrue(registers.getRegister(1) == 0);
+
+    }
+
+    @Test
+    public void testFactorial() throws Exception {
+
+        /**
+         * Run factorial.sml program
+         *
+         * Expected state of registers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 720, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]         *
+         */
+
+        String program = "com/sdp/cwone/programs/factorial.sml";
+        translator1 = new Translator(program);
+        translator1.readAndTranslate(machine.getLabels(), machine.getProg());
+        machine.execute();
+
+        registers = machine.getRegisters();
+
+        assertTrue(registers.getRegister(21) == 720);
 
     }
 
