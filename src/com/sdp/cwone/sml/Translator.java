@@ -3,8 +3,8 @@ package com.sdp.cwone.sml;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -74,11 +74,6 @@ public class Translator {
     // removed. Translate line into an instruction with label label
     // and return the instruction
     public Instruction getInstruction(String label) {
-        int s1; // Possible operands of the instruction
-        int s2;
-        int r;
-        int x;
-        String l;
 
         if (line.equals(""))
             return null;
@@ -86,53 +81,50 @@ public class Translator {
         String ins = scan();
 
         Package p = Instruction.class.getPackage();
+        Object[] parameters;
 
         try {
-            Class c = Class.forName(p.getName() + "." + ins.substring(0, 1).toUpperCase() + ins.substring(1) + "Instruction");
-            Constructor[] cs = c.getConstructors();
 
-            System.out.println("Constructors are: "
-                    + Arrays.toString(cs));
+            Class instructionSubClass = Class.forName(p.getName() + "." + ins.substring(0, 1).toUpperCase() + ins.substring(1) + "Instruction");
+            Constructor[] constructors = instructionSubClass.getConstructors();
+            Constructor constructor = constructors[0];
+            Class[] parameterTypes = constructor.getParameterTypes();
+            parameters = new Object[parameterTypes.length];
+            parameters[0] = label;
+
+            for (int i = 1; i < parameters.length; i++) {
+
+                Class type = parameterTypes[i];
+                Object o;
+
+                switch (type.getName()) {
+                    case "int":
+                        o = scanInt();
+                        break;
+                    case "java.lang.String":
+                        o = scan();
+                        break;
+                    default:
+                        throw new RuntimeException("Unexpected parameter type");
+                }
+
+                parameters[i] = o;
+
+            }
+
+            return (Instruction) constructor.newInstance(parameters);
+
         } catch (ClassNotFoundException e) {
             System.out.println("Class not found");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
 
-        switch (ins) {
-            case "add":
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new AddInstruction(label, r, s1, s2);
-            case "sub":
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new SubInstruction(label, r, s1, s2);
-            case "mul":
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new MulInstruction(label, r, s1, s2);
-            case "div":
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new DivInstruction(label, r, s1, s2);
-            case "out":
-                s1 = scanInt();
-                return new OutInstruction(label, s1);
-            case "lin":
-                r = scanInt();
-                s1 = scanInt();
-                return new LinInstruction(label, r, s1);
-            case "bnz":
-                r = scanInt();
-                l = scan();
-                return new BnzInstruction(label, r, l);
-            default:
-                throw new RuntimeException("Unrecognised Op Code");
-
-        }
+        return null;
 
     }
 
